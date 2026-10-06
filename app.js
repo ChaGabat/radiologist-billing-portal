@@ -1,3 +1,6 @@
+const API_URL = 'https://script.googleapis.com/v1/scripts/AKfycbxFgUADkKoUH8QfGPUyUczC12eB5DZDH5xF16aXZtpSQuHJhkDqETIeeLM7RqL_UP1Grw:run';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxFgUADkKoUH8QfGPUyUczC12eB5DZDH5xF16aXZtpSQuHJhkDqETIeeLM7RqL_UP1Grw/exec';
+
 const SAMPLE_DATA = [
     {
         Modality: 'CT',
@@ -46,153 +49,15 @@ const SAMPLE_DATA = [
         User_in_Dictated: 'Dr. Smith',
         Peer_Review: 1,
         Time_in_Dictated: '2026-10-02'
-    },
-    {
-        Modality: 'CT',
-        Study_Description: 'Abdominal CT',
-        Study_IUID: '1.2.840.113619.2.86.1234.10005',
-        CPT: '74181',
-        cpt_mods: 'CT',
-        RA: 'RA-003',
-        Local_Radiologist: 'Dr. Smith',
-        User_in_Dictated: 'Dr. Smith',
-        Peer_Review: 1,
-        Time_in_Dictated: '2026-10-03'
-    },
-    {
-        Modality: 'MRI',
-        Study_Description: 'Spine MRI',
-        Study_IUID: '1.2.840.113619.2.86.1234.10006',
-        CPT: '72141',
-        cpt_mods: 'MRI',
-        RA: 'RA-004',
-        Local_Radiologist: 'Dr. Smith',
-        User_in_Dictated: 'Dr. Smith',
-        Peer_Review: 0,
-        Time_in_Dictated: '2026-10-04'
-    },
-    {
-        Modality: 'CT',
-        Study_Description: 'Chest CT angiography',
-        Study_IUID: '1.2.840.113619.2.86.1234.10007',
-        CPT: '71275',
-        cpt_mods: 'CT',
-        RA: 'RA-003',
-        Local_Radiologist: 'Dr. Jones',
-        User_in_Dictated: 'Dr. Jones',
-        Peer_Review: 1,
-        Time_in_Dictated: '2026-10-01'
-    },
-    {
-        Modality: 'XRAY',
-        Study_Description: 'Spine X-ray',
-        Study_IUID: '1.2.840.113619.2.86.1234.10008',
-        CPT: '72052',
-        cpt_mods: 'XRAY',
-        RA: 'RA-005',
-        Local_Radiologist: 'Dr. Jones',
-        User_in_Dictated: 'Dr. Jones',
-        Peer_Review: 0,
-        Time_in_Dictated: '2026-10-02'
-    },
-    {
-        Modality: 'MRI',
-        Study_Description: 'Shoulder MRI',
-        Study_IUID: '1.2.840.113619.2.86.1234.10009',
-        CPT: '73221',
-        cpt_mods: 'MRI',
-        RA: 'RA-006',
-        Local_Radiologist: 'Dr. Jones',
-        User_in_Dictated: 'Dr. Jones',
-        Peer_Review: 0,
-        Time_in_Dictated: '2026-10-03'
-    },
-    {
-        Modality: 'US',
-        Study_Description: 'Pelvic ultrasound',
-        Study_IUID: '1.2.840.113619.2.86.1234.10010',
-        CPT: '76856',
-        cpt_mods: 'US',
-        RA: 'RA-006',
-        Local_Radiologist: 'Dr. Jones',
-        User_in_Dictated: 'Dr. Jones',
-        Peer_Review: 1,
-        Time_in_Dictated: '2026-10-04'
-    },
-    {
-        Modality: 'CT',
-        Study_Description: 'Pelvis CT',
-        Study_IUID: '1.2.840.113619.2.86.1234.10011',
-        CPT: '74170',
-        cpt_mods: 'CT',
-        RA: 'RA-003',
-        Local_Radiologist: 'Dr. Jones',
-        User_in_Dictated: 'Dr. Jones',
-        Peer_Review: 0,
-        Time_in_Dictated: '2026-10-05'
-    },
-    {
-        Modality: 'CT',
-        Study_Description: 'Sinus CT',
-        Study_IUID: '1.2.840.113619.2.86.1234.10012',
-        CPT: '70486',
-        cpt_mods: 'CT',
-        RA: 'RA-004',
-        Local_Radiologist: 'Dr. Brown',
-        User_in_Dictated: 'Dr. Brown',
-        Peer_Review: 1,
-        Time_in_Dictated: '2026-10-02'
-    },
-    {
-        Modality: 'MRI',
-        Study_Description: 'Knee MRI',
-        Study_IUID: '1.2.840.113619.2.86.1234.10013',
-        CPT: '73721',
-        cpt_mods: 'MRI',
-        RA: 'RA-005',
-        Local_Radiologist: 'Dr. Brown',
-        User_in_Dictated: 'Dr. Brown',
-        Peer_Review: 1,
-        Time_in_Dictated: '2026-10-03'
-    },
-    {
-        Modality: 'X-Ray',
-        Study_Description: 'Hand X-ray',
-        Study_IUID: '1.2.840.113619.2.86.1234.10014',
-        CPT: '73110',
-        cpt_mods: 'XRAY',
-        RA: 'RA-006',
-        Local_Radiologist: 'Dr. Brown',
-        User_in_Dictated: 'Dr. Brown',
-        Peer_Review: 0,
-        Time_in_Dictated: '2026-10-04'
-    },
-    {
-        Modality: 'US',
-        Study_Description: 'Thyroid ultrasound',
-        Study_IUID: '1.2.840.113619.2.86.1234.10015',
-        CPT: '76536',
-        cpt_mods: 'US',
-        RA: 'RA-001',
-        Local_Radiologist: 'Dr. Brown',
-        User_in_Dictated: 'Dr. Brown',
-        Peer_Review: 0,
-        Time_in_Dictated: '2026-10-05'
     }
 ];
 
-const DEFAULT_ADMIN_PASSWORD = 'admin123';
 let currentUser = null;
 
 const elements = {
-    loginSection: document.getElementById('loginSection'),
     radiologistDashboard: document.getElementById('radiologistDashboard'),
     adminDashboard: document.getElementById('adminDashboard'),
-    userType: document.getElementById('userType'),
-    radiologistLogin: document.getElementById('radiologistLogin'),
-    adminLogin: document.getElementById('adminLogin'),
-    radiologistName: document.getElementById('radiologistName'),
-    radiologistNameDisplay: document.getElementById('radiologistNameDisplay'),
+    radRadiologist: document.getElementById('radRadiologist'),
     radStartDate: document.getElementById('radStartDate'),
     radEndDate: document.getElementById('radEndDate'),
     adminStartDate: document.getElementById('adminStartDate'),
@@ -209,8 +74,7 @@ const elements = {
 };
 
 function initializeApp() {
-    const radiologists = getUniqueRadiologists();
-    populateRadiologistDropdown(radiologists);
+    populateRadiologistDropdown();
 
     const today = new Date();
     const defaultStart = new Date(today);
@@ -221,15 +85,40 @@ function initializeApp() {
     elements.adminStartDate.value = formatDate(defaultStart);
     elements.adminEndDate.value = formatDate(today);
 
-    updateLoginForm();
+    switchRole('radiologist');
 }
 
-function getUniqueRadiologists() {
-    return [...new Set(SAMPLE_DATA.map(item => item.Local_Radiologist).filter(Boolean))].sort();
+function switchRole(role) {
+    const radiologistBtn = document.querySelector('.role-btn:nth-child(1)');
+    const adminBtn = document.querySelector('.role-btn:nth-child(2)');
+
+    if (role === 'radiologist') {
+        elements.radiologistDashboard.classList.add('active');
+        elements.adminDashboard.classList.remove('active');
+        radiologistBtn.classList.add('active');
+        adminBtn.classList.remove('active');
+    } else {
+        elements.radiologistDashboard.classList.remove('active');
+        elements.adminDashboard.classList.add('active');
+        adminBtn.classList.add('active');
+        radiologistBtn.classList.remove('active');
+    }
 }
 
-function populateRadiologistDropdown(radiologists) {
-    const select = elements.radiologistName;
+async function populateRadiologistDropdown() {
+    let radiologists = [];
+
+    try {
+        const url = APPS_SCRIPT_URL + '?action=getRadiologists';
+        const response = await fetch(url);
+        const data = await response.json();
+        radiologists = Array.isArray(data) ? data : [];
+    } catch (error) {
+        console.error('Failed to load radiologists from BigQuery:', error);
+        showError(elements.radError, 'Could not load radiologists. Check your Google Apps Script deployment.');
+    }
+
+    const select = elements.radRadiologist;
     select.innerHTML = '<option value="">-- Select radiologist --</option>';
 
     radiologists.forEach(name => {
@@ -240,66 +129,13 @@ function populateRadiologistDropdown(radiologists) {
     });
 }
 
-function updateLoginForm() {
-    const selectedUserType = elements.userType.value;
-
-    elements.radiologistLogin.style.display = selectedUserType === 'radiologist' ? 'block' : 'none';
-    elements.adminLogin.style.display = selectedUserType === 'admin' ? 'block' : 'none';
-}
-
-function loginRadiologist() {
-    const selectedRadiologist = elements.radiologistName.value;
-
-    if (!selectedRadiologist) {
-        alert('Please choose a radiologist before logging in.');
-        return;
-    }
-
-    currentUser = { type: 'radiologist', name: selectedRadiologist };
-    elements.radiologistNameDisplay.textContent = selectedRadiologist;
-    elements.loginSection.classList.remove('active');
-    elements.radiologistDashboard.classList.add('active');
-    elements.adminDashboard.classList.remove('active');
-    document.getElementById('radiologistSummary').classList.add('active');
-    document.getElementById('adminSummary').classList.remove('active');
-}
-
-function loginAdmin() {
-    const password = document.getElementById('adminPassword').value;
-
-    if (password !== DEFAULT_ADMIN_PASSWORD) {
-        alert('Incorrect admin password. Please use: admin123');
-        return;
-    }
-
-    currentUser = { type: 'admin', name: 'Administrator' };
-    elements.loginSection.classList.remove('active');
-    elements.adminDashboard.classList.add('active');
-    elements.radiologistDashboard.classList.remove('active');
-    document.getElementById('adminSummary').classList.add('active');
-    document.getElementById('radiologistSummary').classList.remove('active');
-}
-
-function logout() {
-    currentUser = null;
-    elements.loginSection.classList.add('active');
-    elements.radiologistDashboard.classList.remove('active');
-    elements.adminDashboard.classList.remove('active');
-    elements.userType.value = '';
-    updateLoginForm();
-    document.getElementById('adminPassword').value = '';
-    elements.radiologistName.value = '';
-    elements.radError.style.display = 'none';
-    elements.adminError.style.display = 'none';
-}
-
-function generateRadiologistSummary() {
+async function generateRadiologistSummary() {
+    const radiologist = elements.radRadiologist.value;
     const startDate = elements.radStartDate.value;
     const endDate = elements.radEndDate.value;
-    const selectedRadiologist = currentUser && currentUser.type === 'radiologist' ? currentUser.name : elements.radiologistName.value;
 
-    if (!selectedRadiologist) {
-        showError(elements.radError, 'Please select a radiologist before generating the report.');
+    if (!radiologist) {
+        showError(elements.radError, 'Please select a radiologist.');
         return;
     }
 
@@ -316,20 +152,33 @@ function generateRadiologistSummary() {
     hideError(elements.radError);
     showLoading(elements.radLoading);
 
-    setTimeout(() => {
-        const filteredData = filterByDateAndRadiologist(SAMPLE_DATA, startDate, endDate, selectedRadiologist);
+    try {
+        const url = `${APPS_SCRIPT_URL}?action=getRadiologistSummary&radiologist=${encodeURIComponent(radiologist)}&startDate=${startDate}&endDate=${endDate}`;
+        const response = await fetch(url);
+        const data = await response.json();
 
-        const totals = summarizeByCptMods(filteredData);
+        if (data.error) {
+            showError(elements.radError, 'Error: ' + data.error);
+            hideLoading(elements.radLoading);
+            return;
+        }
+
+        const arrayData = Array.isArray(data) ? data : [];
+
+        const totals = summarizeByCptMods(arrayData);
         renderTotalCptMods(elements.radTotalCptMods, totals);
-        renderDailyBreakdown(elements.radDailyBreakdown, filteredData);
-        renderStudyTable(elements.radiologistStudiesTable, filteredData);
-
+        renderDailyBreakdown(elements.radDailyBreakdown, arrayData);
+        renderStudyTable(elements.radiologistStudiesTable, arrayData, false);
         document.getElementById('radiologistSummary').classList.add('active');
+    } catch (error) {
+        console.error('Error:', error);
+        showError(elements.radError, 'Failed to load radiologist summary: ' + error.message);
+    } finally {
         hideLoading(elements.radLoading);
-    }, 200);
+    }
 }
 
-function generateAdminSummary() {
+async function generateAdminSummary() {
     const startDate = elements.adminStartDate.value;
     const endDate = elements.adminEndDate.value;
 
@@ -346,16 +195,29 @@ function generateAdminSummary() {
     hideError(elements.adminError);
     showLoading(elements.adminLoading);
 
-    setTimeout(() => {
-        const filteredData = filterByDate(SAMPLE_DATA, startDate, endDate);
-        const grouped = summarizeByRadiologistCptMods(filteredData);
+    try {
+        const url = `${APPS_SCRIPT_URL}?action=getAdminSummary&startDate=${startDate}&endDate=${endDate}`;
+        const response = await fetch(url);
+        const data = await response.json();
 
+        if (data.error) {
+            showError(elements.adminError, 'Error: ' + data.error);
+            hideLoading(elements.adminLoading);
+            return;
+        }
+
+        const arrayData = Array.isArray(data) ? data : [];
+
+        const grouped = summarizeByRadiologistCptMods(arrayData);
         renderAdminSummaryTable(elements.adminSummaryTable, grouped);
-        renderStudyTable(elements.adminStudiesTable, filteredData, true);
-
+        renderStudyTable(elements.adminStudiesTable, arrayData, true);
         document.getElementById('adminSummary').classList.add('active');
+    } catch (error) {
+        console.error('Error:', error);
+        showError(elements.adminError, 'Failed to load admin summary: ' + error.message);
+    } finally {
         hideLoading(elements.adminLoading);
-    }, 200);
+    }
 }
 
 function filterByDateAndRadiologist(data, startDate, endDate, radiologist) {
@@ -555,7 +417,7 @@ function downloadRadiologistPDF() {
     const element = document.getElementById('radiologistSummary');
     const opt = {
         margin: 0.3,
-        filename: `${currentUser?.name || 'radiologist'}_summary.pdf`,
+        filename: `${elements.radRadiologist.value || 'radiologist'}_summary.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
@@ -569,13 +431,11 @@ function downloadAdminExcel() {
     const studiesTable = document.getElementById('adminStudiesTable');
 
     const wb = XLSX.utils.book_new();
-
     const summarySheet = XLSX.utils.table_to_sheet(summaryTable);
-    XLSX.utils.book_append_sheet(wb, summarySheet, 'Summary');
-
     const studiesSheet = XLSX.utils.table_to_sheet(studiesTable);
-    XLSX.utils.book_append_sheet(wb, studiesSheet, 'Studies');
 
+    XLSX.utils.book_append_sheet(wb, summarySheet, 'Summary');
+    XLSX.utils.book_append_sheet(wb, studiesSheet, 'Studies');
     XLSX.writeFile(wb, 'admin_summary.xlsx');
 }
 
