@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radiologist Billing Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .login-section {
+            display: none;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .login-section.active {
+            display: block;
+        }
+
+        .login-box {
+            max-width: 400px;
+            margin: 0 auto;
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .login-box h2 {
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-logout {
+            background: #e74c3c;
+            color: white;
+            padding: 8px 20px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .btn-logout:hover {
+            background: #c0392b;
+        }
+
+        .btn-generate {
+            background: #27ae60;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .btn-generate:hover {
+            background: #229954;
+        }
+
+        .btn-download {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            font-size: 12px;
+            margin: 5px;
+        }
+
+        .btn-download:hover {
+            background: #2980b9;
+        }
+
+        .dashboard-section {
+            display: none;
+            padding: 30px;
+        }
+
+        .dashboard-section.active {
+            display: block;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .dashboard-header h2 {
+            color: #333;
+            font-size: 24px;
+        }
+
+        .logout-btn {
+            margin-left: auto;
+        }
+
+        .filters {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .summary-section {
+            margin: 30px 0;
+            display: none;
+        }
+
+        .summary-section.active {
+            display: block;
+        }
+
+        .summary-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .summary-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .summary-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card label {
+            display: block;
+            color: #666;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .table-section {
+            margin-top: 30px;
+        }
+
+        .table-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        table thead {
+            background: #f8f9fa;
+            border-bottom: 2px solid #ddd;
+        }
+
+        table th {
+            padding: 15px;
+            text-align: left;
+            color: #333;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+
+        table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .download-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .download-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .daily-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .daily-card {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .daily-card .date {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .modality-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+
+        .modality-item:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .logout-btn {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-content {
+                grid-template-columns: 1fr;
+            }
+
+            .daily-breakdown {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            table th,
+            table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📊 Radiologist Billing Portal</h1>
+            <p>Case Summary & Incentive Calculation System</p>
+        </div>
+
+        <!-- Login Section -->
+        <div id="loginSection" class="login-section active">
+            <div class="login-box">
+                <h2>Login</h2>
+                <div class="form-group">
+                    <label for="userType">Select User Type:</label>
+                    <select id="userType" onchange="updateLoginForm()">
+                        <option value="">-- Select --</option>
+                        <option value="radiologist">Radiologist</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+
+                <div id="radiologistLogin" style="display: none;">
+                    <div class="form-group">
+                        <label for="radiologistName">Select Radiologist:</label>
+                        <select id="radiologistName">
+                            <option value="">-- Loading... --</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="loginRadiologist()">Login as Radiologist</button>
+                </div>
+
+                <div id="adminLogin" style="display: none;">
+                    <div class="form-group">
+                        <label for="adminPassword">Admin Password:</label>
+                        <input type="password" id="adminPassword" placeholder="Enter admin password">
+                    </div>
+                    <button class="btn btn-primary" onclick="loginAdmin()">Login as Admin</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Radiologist Dashboard -->
+        <div id="radiologistDashboard" class="dashboard-section">
+            <div class="dashboard-header">
+                <div>
+                    <h2>Welcome, <span id="radiologistNameDisplay"></span></h2>
+                    <p style="color: #666; font-size: 14px;">Radiologist Dashboard</p>
+                </div>
+                <button class="btn btn-logout logout-btn" onclick="logout()">Logout</button>
+            </div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="radStartDate">Start Date:</label>
+                    <input type="date" id="radStartDate">
+                </div>
+                <div class="filter-group">
+                    <label for="radEndDate">End Date:</label>
+                    <input type="date" id="radEndDate">
+                </div>
+                <div class="filter-group" style="align-self: flex-end;">
+                    <button class="btn btn-generate" onclick="generateRadiologistSummary()" style="width: 100%;">Generate Summary</button>
+                </div>
+            </div>
+
+            <div id="radiologistSummary" class="summary-section">
+                <!-- Loading indicator -->
+                <div id="radLoading" class="loading" style="display: none;">Loading data...</div>
+
+                <!-- Error message -->
+                <div id="radError" class="error" style="display: none;"></div>
+
+                <!-- Total Cases by Modality -->
+                <div class="summary-box">
+                    <h3>📈 Total Cases Read by Modality</h3>
+                    <div class="summary-content" id="radTotalModality">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Daily Cases by Modality -->
+                <div class="summary-box">
+                    <h3>📅 Daily Cases by Modality</h3>
+                    <div class="daily-breakdown" id="radDailyBreakdown">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Studies List -->
+                <div class="table-section">
+                    <h3>📋 Studies Read</h3>
+                    <div class="table-wrapper">
+                        <table id="radiologistStudiesTable">
+                            <thead>
+                                <tr>
+                                    <th>Study Date</th>
+                                    <th>Modality</th>
+                                    <th>Study Description</th>
+                                    <th>Study UID</th>
+                                    <th>CPT Code</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Download Section -->
+                <div class="download-section">
+                    <h3>📥 Download Report</h3>
+                    <button class="btn btn-download" onclick="downloadRadiologistPDF()">📄 Download as PDF</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="adminDashboard" class="dashboard-section">
+            <div class="dashboard-header">
+                <div>
+                    <h2>Admin Dashboard</h2>
+                    <p style="color: #666; font-size: 14px;">System Administrator</p>
+                </div>
+                <button class="btn btn-logout logout-btn" onclick="logout()">Logout</button>
+            </div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="adminStartDate">Start Date:</label>
+                    <input type="date" id="adminStartDate">
+                </div>
+                <div class="filter-group">
+                    <label for="adminEndDate">End Date:</label>
+                    <input type="date" id="adminEndDate">
+                </div>
+                <div class="filter-group" style="align-self: flex-end;">
+                    <button class="btn btn-generate" onclick="generateAdminSummary()" style="width: 100%;">Generate Summary</button>
+                </div>
+            </div>
+
+            <div id="adminSummary" class="summary-section">
+                <!-- Loading indicator -->
+                <div id="adminLoading" class="loading" style="display: none;">Loading data...</div>
+
+                <!-- Error message -->
+                <div id="adminError" class="error" style="display: none;"></div>
+
+                <!-- Total Cases by Radiologist and Modality -->
+                <div class="table-section">
+                    <h3>📊 Cases by Radiologist & Modality</h3>
+                    <div class="table-wrapper">
+                        <table id="adminSummaryTable">
+                            <thead>
+                                <tr>
+                                    <th>Radiologist</th>
+                                    <th>Modality</th>
+                                    <th>Total Cases</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- All Studies List -->
+                <div class="table-section">
+                    <h3>📋 All Studies</h3>
+                    <div class="table-wrapper">
+                        <table id="adminStudiesTable">
+                            <thead>
+                                <tr>
+                                    <th>Radiologist</th>
+                                    <th>Study Date</th>
+                                    <th>Modality</th>
+                                    <th>Study Description</th>
+                                    <th>Study UID</th>
+                                    <th>CPT Code</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Download Section -->
+                <div class="download-section">
+                    <h3>📥 Download Report</h3>
+                    <button class="btn btn-download" onclick="downloadAdminExcel()">📊 Download as Excel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script for functionality -->
+    <script src="app.js"></script>
+</body>
+</html>
