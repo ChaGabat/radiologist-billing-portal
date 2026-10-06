@@ -47,112 +47,42 @@
             opacity: 0.9;
         }
 
-        .login-section {
-            display: none;
-            padding: 40px;
-            text-align: center;
-        }
-
-        .login-section.active {
-            display: block;
-        }
-
-        .login-box {
-            max-width: 400px;
-            margin: 0 auto;
+        .role-selector {
             background: #f8f9fa;
             padding: 30px;
-            border-radius: 8px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
         }
 
-        .login-box h2 {
-            margin-bottom: 30px;
-            color: #333;
+        .role-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .form-group select,
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            font-family: inherit;
-        }
-
-        .form-group select:focus,
-        .form-group input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 5px;
-            font-size: 14px;
+        .role-btn {
+            padding: 15px 40px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            font-size: 16px;
             font-weight: 600;
+            border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .role-btn:hover {
+            background: #667eea;
             color: white;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
         }
 
-        .btn-logout {
-            background: #e74c3c;
+        .role-btn.active {
+            background: #667eea;
             color: white;
-            padding: 8px 20px;
-            font-size: 12px;
-            margin-left: 10px;
-        }
-
-        .btn-logout:hover {
-            background: #c0392b;
-        }
-
-        .btn-generate {
-            background: #27ae60;
-            color: white;
-            margin-top: 10px;
-        }
-
-        .btn-generate:hover {
-            background: #229954;
-        }
-
-        .btn-download {
-            background: #3498db;
-            color: white;
-            padding: 10px 20px;
-            font-size: 12px;
-            margin: 5px;
-        }
-
-        .btn-download:hover {
-            background: #2980b9;
         }
 
         .dashboard-section {
@@ -178,8 +108,13 @@
             font-size: 24px;
         }
 
-        .logout-btn {
-            margin-left: auto;
+        .role-label {
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
         }
 
         .filters {
@@ -220,11 +155,37 @@
             box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-generate {
+            background: #27ae60;
+            color: white;
             margin-top: 10px;
+        }
+
+        .btn-generate:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+
+        .btn-download {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            font-size: 12px;
+            margin: 5px;
+        }
+
+        .btn-download:hover {
+            background: #2980b9;
         }
 
         .summary-section {
@@ -359,15 +320,6 @@
             margin: 20px 0;
         }
 
-        .success {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-
         .daily-breakdown {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -405,14 +357,17 @@
                 font-size: 20px;
             }
 
+            .role-buttons {
+                flex-direction: column;
+            }
+
+            .role-btn {
+                width: 100%;
+            }
+
             .dashboard-header {
                 flex-direction: column;
                 align-items: flex-start;
-            }
-
-            .logout-btn {
-                margin-left: 0;
-                width: 100%;
             }
 
             .filters {
@@ -446,50 +401,32 @@
             <p>Case Summary & Incentive Calculation System</p>
         </div>
 
-        <!-- Login Section -->
-        <div id="loginSection" class="login-section active">
-            <div class="login-box">
-                <h2>Login</h2>
-                <div class="form-group">
-                    <label for="userType">Select User Type:</label>
-                    <select id="userType" onchange="updateLoginForm()">
-                        <option value="">-- Select --</option>
-                        <option value="radiologist">Radiologist</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
-
-                <div id="radiologistLogin" style="display: none;">
-                    <div class="form-group">
-                        <label for="radiologistName">Select Radiologist:</label>
-                        <select id="radiologistName">
-                            <option value="">-- Loading radiologists... --</option>
-                        </select>
-                    </div>
-                    <button class="btn btn-primary" onclick="loginRadiologist()">Login as Radiologist</button>
-                </div>
-
-                <div id="adminLogin" style="display: none;">
-                    <div class="form-group">
-                        <label for="adminPassword">Admin Password:</label>
-                        <input type="password" id="adminPassword" placeholder="Enter admin password">
-                    </div>
-                    <button class="btn btn-primary" onclick="loginAdmin()">Login as Admin</button>
-                </div>
+        <!-- Role Selector -->
+        <div class="role-selector">
+            <h3 style="margin-bottom: 20px; color: #333;">Select View</h3>
+            <div class="role-buttons">
+                <button class="role-btn active" onclick="switchRole('radiologist')">👨‍⚕️ Radiologist View</button>
+                <button class="role-btn" onclick="switchRole('admin')">👤 Admin View</button>
             </div>
         </div>
 
         <!-- Radiologist Dashboard -->
-        <div id="radiologistDashboard" class="dashboard-section">
+        <div id="radiologistDashboard" class="dashboard-section active">
             <div class="dashboard-header">
                 <div>
-                    <h2>Welcome, <span id="radiologistNameDisplay"></span></h2>
-                    <p style="color: #666; font-size: 14px;">Radiologist Summary Report</p>
+                    <h2>Radiologist Summary Report</h2>
+                    <p style="color: #666; font-size: 14px;">Select a radiologist and date range to generate report</p>
                 </div>
-                <button class="btn btn-logout logout-btn" onclick="logout()">Logout</button>
+                <div class="role-label">Radiologist View</div>
             </div>
 
             <div class="filters">
+                <div class="filter-group">
+                    <label for="radRadiologist">Select Radiologist:</label>
+                    <select id="radRadiologist">
+                        <option value="">-- Loading radiologists... --</option>
+                    </select>
+                </div>
                 <div class="filter-group">
                     <label for="radStartDate">Start Date:</label>
                     <input type="date" id="radStartDate">
@@ -564,10 +501,10 @@
         <div id="adminDashboard" class="dashboard-section">
             <div class="dashboard-header">
                 <div>
-                    <h2>Admin Dashboard</h2>
-                    <p style="color: #666; font-size: 14px;">System Administrator - All Cases Summary</p>
+                    <h2>Admin Summary Report</h2>
+                    <p style="color: #666; font-size: 14px;">View all cases by radiologist and date range</p>
                 </div>
-                <button class="btn btn-logout logout-btn" onclick="logout()">Logout</button>
+                <div class="role-label">Admin View</div>
             </div>
 
             <div class="filters">
