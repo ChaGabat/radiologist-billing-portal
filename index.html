@@ -23,7 +23,7 @@
 
         .container {
             width: 100%;
-            max-width: 1400px;
+            max-width: 1600px;
             background: white;
             border-radius: 10px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
@@ -300,26 +300,30 @@
             width: 100%;
             border-collapse: collapse;
             background: white;
+            font-size: 13px;
         }
 
         table thead {
             background: #f8f9fa;
             border-bottom: 2px solid #ddd;
+            position: sticky;
+            top: 0;
         }
 
         table th {
-            padding: 15px;
+            padding: 12px;
             text-align: left;
             color: #333;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12px;
             text-transform: uppercase;
+            white-space: nowrap;
         }
 
         table td {
-            padding: 12px 15px;
+            padding: 10px 12px;
             border-bottom: 1px solid #eee;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         table tbody tr:hover {
@@ -384,15 +388,15 @@
             margin-bottom: 10px;
         }
 
-        .modality-item {
+        .cpt-item {
             display: flex;
             justify-content: space-between;
             padding: 5px 0;
             border-bottom: 1px solid #eee;
-            font-size: 13px;
+            font-size: 12px;
         }
 
-        .modality-item:last-child {
+        .cpt-item:last-child {
             border-bottom: none;
         }
 
@@ -424,12 +428,12 @@
             }
 
             table {
-                font-size: 12px;
+                font-size: 11px;
             }
 
             table th,
             table td {
-                padding: 8px;
+                padding: 6px;
             }
         }
     </style>
@@ -459,7 +463,7 @@
                     <div class="form-group">
                         <label for="radiologistName">Select Radiologist:</label>
                         <select id="radiologistName">
-                            <option value="">-- Loading... --</option>
+                            <option value="">-- Loading radiologists... --</option>
                         </select>
                     </div>
                     <button class="btn btn-primary" onclick="loginRadiologist()">Login as Radiologist</button>
@@ -480,7 +484,7 @@
             <div class="dashboard-header">
                 <div>
                     <h2>Welcome, <span id="radiologistNameDisplay"></span></h2>
-                    <p style="color: #666; font-size: 14px;">Radiologist Dashboard</p>
+                    <p style="color: #666; font-size: 14px;">Radiologist Summary Report</p>
                 </div>
                 <button class="btn btn-logout logout-btn" onclick="logout()">Logout</button>
             </div>
@@ -506,17 +510,17 @@
                 <!-- Error message -->
                 <div id="radError" class="error" style="display: none;"></div>
 
-                <!-- Total Cases by Modality -->
+                <!-- Total Cases by CPT Mods -->
                 <div class="summary-box">
-                    <h3>📈 Total Cases Read by Modality</h3>
-                    <div class="summary-content" id="radTotalModality">
+                    <h3>📈 Total Cases Read by CPT Mods</h3>
+                    <div class="summary-content" id="radTotalCptMods">
                         <!-- Populated by JavaScript -->
                     </div>
                 </div>
 
-                <!-- Daily Cases by Modality -->
+                <!-- Daily Cases by CPT Mods -->
                 <div class="summary-box">
-                    <h3>📅 Daily Cases by Modality</h3>
+                    <h3>📅 Daily Cases by CPT Mods</h3>
                     <div class="daily-breakdown" id="radDailyBreakdown">
                         <!-- Populated by JavaScript -->
                     </div>
@@ -529,12 +533,16 @@
                         <table id="radiologistStudiesTable">
                             <thead>
                                 <tr>
-                                    <th>Study Date</th>
+                                    <th>Date (Dictated)</th>
                                     <th>Modality</th>
                                     <th>Study Description</th>
+                                    <th>CPT</th>
+                                    <th>CPT Mods</th>
+                                    <th>RA</th>
+                                    <th>User Dictated</th>
+                                    <th>Local Radiologist</th>
+                                    <th>Peer Review</th>
                                     <th>Study UID</th>
-                                    <th>CPT Code</th>
-                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -557,7 +565,7 @@
             <div class="dashboard-header">
                 <div>
                     <h2>Admin Dashboard</h2>
-                    <p style="color: #666; font-size: 14px;">System Administrator</p>
+                    <p style="color: #666; font-size: 14px;">System Administrator - All Cases Summary</p>
                 </div>
                 <button class="btn btn-logout logout-btn" onclick="logout()">Logout</button>
             </div>
@@ -583,15 +591,15 @@
                 <!-- Error message -->
                 <div id="adminError" class="error" style="display: none;"></div>
 
-                <!-- Total Cases by Radiologist and Modality -->
+                <!-- Total Cases by Radiologist and CPT Mods -->
                 <div class="table-section">
-                    <h3>📊 Cases by Radiologist & Modality</h3>
+                    <h3>📊 Cases by Radiologist & CPT Mods</h3>
                     <div class="table-wrapper">
                         <table id="adminSummaryTable">
                             <thead>
                                 <tr>
-                                    <th>Radiologist</th>
-                                    <th>Modality</th>
+                                    <th>Local Radiologist</th>
+                                    <th>CPT Mods</th>
                                     <th>Total Cases</th>
                                 </tr>
                             </thead>
@@ -609,13 +617,16 @@
                         <table id="adminStudiesTable">
                             <thead>
                                 <tr>
-                                    <th>Radiologist</th>
-                                    <th>Study Date</th>
+                                    <th>Date (Dictated)</th>
+                                    <th>Local Radiologist</th>
                                     <th>Modality</th>
                                     <th>Study Description</th>
+                                    <th>CPT</th>
+                                    <th>CPT Mods</th>
+                                    <th>RA</th>
+                                    <th>User Dictated</th>
+                                    <th>Peer Review</th>
                                     <th>Study UID</th>
-                                    <th>CPT Code</th>
-                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -634,7 +645,11 @@
         </div>
     </div>
 
-    <!-- Script for functionality -->
+    <!-- Libraries for PDF and Excel Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
+
+    <!-- Main Application Script -->
     <script src="app.js"></script>
 </body>
 </html>
