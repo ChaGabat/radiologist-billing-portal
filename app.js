@@ -1,5 +1,5 @@
-const API_URL = 'https://script.googleapis.com/v1/scripts/AKfycbxFgUADkKoUH8QfGPUyUczC12eB5DZDH5xF16aXZtpSQuHJhkDqETIeeLM7RqL_UP1Grw:run';
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxFgUADkKoUH8QfGPUyUczC12eB5DZDH5xF16aXZtpSQuHJhkDqETIeeLM7RqL_UP1Grw/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxgPaA8g4p5d60sj3cm3a0onRgqyQcbULcZAj5lJ2cs8fVEEaclb9BbguGBDTaBiKstEA/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxgPaA8g4p5d60sj3cm3a0onRgqyQcbULcZAj5lJ2cs8fVEEaclb9BbguGBDTaBiKstEA/exec';
 
 const SAMPLE_DATA = [
     {
