@@ -533,3 +533,10 @@ function runBigQuery(query) {
   return BigQuery.Jobs.query(request, CONFIG.projectId);
 }
 */
+
+
+function doGetPage() {
+  return HtmlService.createTemplateFromFile('index')
+    .evaluate()
+    .setTitle('Radiologist Billing Portal');
+}
