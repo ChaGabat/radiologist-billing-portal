@@ -262,6 +262,132 @@ function createErrorResponse(message, statusCode = 400) {
 /**
  * Helper: Execute BigQuery query (kept simple, error handling is done at call site)
  */
+
+
+
+/**
+ * Execute a BigQuery query reliably.
+ *
+ * Requires the Apps Script BigQuery advanced service.
+ * Returns all rows up to MAX_QUERY_ROWS.
+ * Throws an error rather than returning a partial report.
+ */
+const MAX_QUERY_ROWS = 10000;
+const PAGE_SIZE = 1000;
+const QUERY_TIMEOUT_MS = 20000;
+
+function runBigQuery(query, queryParameters) {
+  const request = {
+    query: query,
+    useLegacySql: false,
+    parameterMode: 'NAMED',
+    queryParameters: queryParameters || [],
+    timeoutMs: QUERY_TIMEOUT_MS,
+    maxResults: PAGE_SIZE
+  };
+
+  let result = BigQuery.Jobs.query(request, CONFIG.projectId);
+
+  if (!result.jobReference || !result.jobReference.jobId) {
+    if (result.errors && result.errors.length) {
+      throw new Error('BigQuery query failed.');
+    }
+
+    if (result.jobComplete === true) {
+      return result;
+    }
+
+    throw new Error('BigQuery did not return a query job ID.');
+  }
+
+  const jobId = result.jobReference.jobId;
+  const location = result.jobReference.location || result.location;
+
+  let delayMs = 500;
+  const deadline = Date.now() + 180000;
+
+  // Wait for query completion.
+  while (result.jobComplete !== true) {
+    if (Date.now() >= deadline) {
+      throw new Error('BigQuery query timed out.');
+    }
+
+    Utilities.sleep(delayMs);
+    delayMs = Math.min(delayMs * 2, 5000);
+
+    const options = { timeoutMs: QUERY_TIMEOUT_MS };
+    if (location) options.location = location;
+
+    result = BigQuery.Jobs.getQueryResults(
+      CONFIG.projectId,
+      jobId,
+      options
+    );
+  }
+
+  // Check the completed job for a fatal execution error.
+  const job = location
+    ? BigQuery.Jobs.get(CONFIG.projectId, jobId, { location: location })
+    : BigQuery.Jobs.get(CONFIG.projectId, jobId);
+
+  if (job.status && job.status.errorResult) {
+    Logger.log('BigQuery job failed: ' +
+      JSON.stringify(job.status.errorResult));
+    throw new Error('BigQuery query execution failed.');
+  }
+
+  let rows = result.rows ? result.rows.slice() : [];
+  let pageToken = result.pageToken;
+
+  while (pageToken) {
+    if (Date.now() >= deadline) {
+      throw new Error('BigQuery result retrieval timed out.');
+    }
+
+    const options = {
+      pageToken: pageToken,
+      maxResults: PAGE_SIZE
+    };
+    if (location) options.location = location;
+
+    const page = BigQuery.Jobs.getQueryResults(
+      CONFIG.projectId,
+      jobId,
+      options
+    );
+
+    if (page.jobComplete !== true) {
+      throw new Error('BigQuery results are not complete.');
+    }
+
+    const nextRows = page.rows || [];
+
+    if (rows.length + nextRows.length > MAX_QUERY_ROWS) {
+      throw new Error(
+        'Report exceeds the maximum of ' +
+        MAX_QUERY_ROWS +
+        ' rows. Narrow the date range or use paginated reports.'
+      );
+    }
+
+    rows = rows.concat(nextRows);
+    pageToken = page.pageToken;
+  }
+
+  if (rows.length > MAX_QUERY_ROWS) {
+    throw new Error(
+      'Report exceeds the maximum permitted row count.'
+    );
+  }
+
+  result.rows = rows;
+  return result;
+}
+
+
+
+
+/*
 function runBigQuery(query) {
   const request = {
     query: query,
@@ -270,3 +396,4 @@ function runBigQuery(query) {
 
   return BigQuery.Jobs.query(request, CONFIG.projectId);
 }
+*/
