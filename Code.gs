@@ -62,6 +62,87 @@ function getRadiologists() {
 /**
  * Fetch summary data for a specific radiologist within a date range
  */
+
+
+function getRadiologistSummary(params) {
+  const radiologist = String(params.radiologist || '').trim();
+  const startDate = String(params.startDate || '').trim();
+  const endDate = String(params.endDate || '').trim();
+
+  const validation = validateDateParams(startDate, endDate);
+
+  if (!validation.isValid) {
+    return createErrorResponse(validation.error, 400);
+  }
+
+  if (!radiologist) {
+    return createErrorResponse(
+      'Missing radiologist parameter.',
+      400
+    );
+  }
+
+  const query = `
+    SELECT
+      Time_in_Dictated,
+      Modality,
+      Study_Description,
+      CPT,
+      cpt_mods,
+      RA,
+      User_in_Dictated,
+      Local_Radiologist,
+      Peer_Review,
+      Study_IUID
+    FROM \`${CONFIG.projectId}.${CONFIG.datasetId}.${CONFIG.tableId}\`
+    WHERE Local_Radiologist = @radiologist
+      AND SAFE_CAST(
+        SUBSTR(TRIM(Time_in_Dictated), 1, 10) AS DATE
+      ) BETWEEN @startDate AND @endDate
+    ORDER BY
+      SAFE_CAST(
+        SUBSTR(TRIM(Time_in_Dictated), 1, 10) AS DATE
+      ) DESC,
+      Time_in_Dictated DESC
+  `;
+
+  const queryParameters = [
+    {
+      name: 'radiologist',
+      parameterType: { type: 'STRING' },
+      parameterValue: { value: radiologist }
+    },
+    {
+      name: 'startDate',
+      parameterType: { type: 'DATE' },
+      parameterValue: { value: startDate }
+    },
+    {
+      name: 'endDate',
+      parameterType: { type: 'DATE' },
+      parameterValue: { value: endDate }
+    }
+  ];
+
+  try {
+    const result = runBigQuery(query, queryParameters);
+    return createSuccessResponse(
+      parseBigQueryRows(result.rows || [])
+    );
+  } catch (error) {
+    Logger.log(
+      'Radiologist summary query failed: ' + error.toString()
+    );
+
+    return createErrorResponse(
+      'Unable to retrieve the report. Please try again.',
+      500
+    );
+  }
+}
+
+
+/*
 function getRadiologistSummary(params) {
   const radiologist = params.radiologist || '';
   const startDate = params.startDate || '';
@@ -127,6 +208,7 @@ function getRadiologistSummary(params) {
     return createErrorResponse('Failed to fetch radiologist summary', 500);
   }
 }
+*/
 
 /**
  * Fetch summary data for all radiologists within a date range
@@ -217,6 +299,58 @@ function parseBigQueryRows(rows) {
 /**
  * Helper: Validate date parameters
  */
+
+
+function validateDateParams(startDate, endDate) {
+  function isRealISODate(value) {
+    if (typeof value !== 'string' ||
+        !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      return false;
+    }
+
+    const parts = value.split('-').map(Number);
+    const year = parts[0];
+    const month = parts[1];
+    const day = parts[2];
+
+    if (year < 1 || month < 1 || month > 12) {
+      return false;
+    }
+
+    const date = new Date(Date.UTC(year, month - 1, day));
+
+    return date.getUTCFullYear() === year &&
+      date.getUTCMonth() === month - 1 &&
+      date.getUTCDate() === day;
+  }
+
+  if (!startDate || !endDate) {
+    return {
+      isValid: false,
+      error: 'Start date and end date are required.'
+    };
+  }
+
+  if (!isRealISODate(startDate) ||
+      !isRealISODate(endDate)) {
+    return {
+      isValid: false,
+      error: 'Dates must be valid calendar dates in YYYY-MM-DD format.'
+    };
+  }
+
+  if (startDate > endDate) {
+    return {
+      isValid: false,
+      error: 'Start date cannot be later than end date.'
+    };
+  }
+
+  return { isValid: true };
+}
+
+
+/*
 function validateDateParams(startDate, endDate) {
   if (!startDate || startDate.trim() === '') {
     return { isValid: false, error: 'Missing startDate parameter' };
@@ -237,6 +371,8 @@ function validateDateParams(startDate, endDate) {
 
   return { isValid: true };
 }
+*/
+
 
 /**
  * Helper: Create a success response
