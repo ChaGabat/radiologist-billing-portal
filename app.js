@@ -288,7 +288,9 @@ function renderDailyBreakdown(container, data) {
 
     const grouped = {};
     const cptModsSet = new Set();
-
+    console.log('Daily breakdown sample:', data.slice(0, 5));
+    console.log('Timestamp sample:', data.slice(0, 5).map(item => item.Time_in_Dictated));
+    console.log('CPT Mods sample:', data.slice(0, 10).map(item => item.cpt_mods));
     // Group cases by calendar date and CPT Mods.
     data.forEach(item => {
         const timestamp = String(item.Time_in_Dictated || '').trim();
