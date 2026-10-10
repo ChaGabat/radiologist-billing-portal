@@ -208,8 +208,8 @@ async function generateAdminSummary() {
 
         const arrayData = Array.isArray(data) ? data : [];
 
-        const grouped = summarizeByRadiologistCptMods(arrayData);
-        renderAdminSummaryTable(elements.adminSummaryTable, grouped);
+        const pivot = summarizeByRadiologistCptMods(arrayData);
+        renderAdminSummaryTable(elements.adminSummaryTable, pivot);
         renderStudyTable(elements.adminStudiesTable, arrayData, true);
         document.getElementById('adminSummary').classList.add('active');
     } catch (error) {
@@ -242,26 +242,36 @@ function summarizeByCptMods(data) {
     return Object.entries(totals).sort((a, b) => b[1] - a[1]);
 }
 
+
 function summarizeByRadiologistCptMods(data) {
-    const totals = {};
+    const grouped = {};
+    const cptModsSet = new Set();
 
     data.forEach(item => {
-        const radiologist = item.Local_Radiologist || 'Unknown';
-        const cptMods = item.cpt_mods || 'Unknown';
-        const key = `${radiologist}|||${cptMods}`;
+        const radiologist = String(item.Local_Radiologist || 'Unknown').trim() || 'Unknown';
+        const cptMod = String(item.cpt_mods || 'Unknown').trim() || 'Unknown';
 
-        if (!totals[key]) {
-            totals[key] = { radiologist, cptMods, total: 0 };
+        if (!grouped[radiologist]) {
+            grouped[radiologist] = {};
         }
 
-        totals[key].total += 1;
+        grouped[radiologist][cptMod] =
+            (grouped[radiologist][cptMod] || 0) + 1;
+
+        cptModsSet.add(cptMod);
     });
 
-    return Object.values(totals).sort((a, b) => {
-        if (a.radiologist !== b.radiologist) return a.radiologist.localeCompare(b.radiologist);
-        return a.cptMods.localeCompare(b.cptMods);
-    });
+    const cptMods = Array.from(cptModsSet).sort((a, b) =>
+        a.localeCompare(b)
+    );
+
+    const radiologists = Object.keys(grouped).sort((a, b) =>
+        a.localeCompare(b)
+    );
+
+    return { radiologists, cptMods, grouped };
 }
+
 
 function renderTotalCptMods(container, totals) {
     container.innerHTML = '';
@@ -437,26 +447,84 @@ function renderStudyTable(tableBody, data, isAdminView = false) {
     });
 }
 
-function renderAdminSummaryTable(tableBody, grouped) {
-    tableBody.innerHTML = '';
 
-    if (!grouped.length) {
-        const emptyRow = document.createElement('tr');
-        emptyRow.innerHTML = '<td colspan="3" style="text-align:center; color:#666;">No records found</td>';
-        tableBody.appendChild(emptyRow);
+function renderAdminSummaryTable(tableBody, pivot) {
+    const table = tableBody.closest('table');
+    const thead = table.querySelector('thead');
+
+    tableBody.innerHTML = '';
+    thead.innerHTML = '';
+
+    const radiologists = pivot.radiologists;
+    const cptMods = pivot.cptMods;
+    const grouped = pivot.grouped;
+
+    // Create the table header.
+    const headerRow = document.createElement('tr');
+
+    const radiologistHeader = document.createElement('th');
+    radiologistHeader.textContent = 'Radiologist';
+    headerRow.appendChild(radiologistHeader);
+
+    cptMods.forEach(cptMod => {
+        const th = document.createElement('th');
+        th.textContent = cptMod;
+        headerRow.appendChild(th);
+    });
+
+    const totalHeader = document.createElement('th');
+    totalHeader.textContent = 'Total';
+    headerRow.appendChild(totalHeader);
+
+    thead.appendChild(headerRow);
+
+    // Display a message if no records are found.
+    if (!radiologists.length) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+
+        cell.colSpan = cptMods.length + 2;
+        cell.textContent = 'No records found';
+        cell.style.textAlign = 'center';
+
+        row.appendChild(cell);
+        tableBody.appendChild(row);
         return;
     }
 
-    grouped.forEach(item => {
+    // Create one row for each radiologist.
+    radiologists.forEach(radiologist => {
         const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${item.radiologist}</td>
-            <td>${item.cptMods}</td>
-            <td>${item.total}</td>
-        `;
+
+        const nameCell = document.createElement('td');
+        nameCell.textContent = radiologist;
+        row.appendChild(nameCell);
+
+        let rowTotal = 0;
+
+        // Create one column for each CPT Mods category.
+        cptMods.forEach(cptMod => {
+            const count = grouped[radiologist][cptMod] || 0;
+
+            const cell = document.createElement('td');
+            cell.textContent = count;
+            cell.style.textAlign = 'center';
+
+            row.appendChild(cell);
+            rowTotal += count;
+        });
+
+        // Add the radiologist's total case count.
+        const totalCell = document.createElement('td');
+        totalCell.textContent = rowTotal;
+        totalCell.style.textAlign = 'center';
+        totalCell.style.fontWeight = 'bold';
+
+        row.appendChild(totalCell);
         tableBody.appendChild(row);
     });
 }
+
 
 function showLoading(element) {
     element.style.display = 'block';
