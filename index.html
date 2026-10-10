@@ -1,9 +1,11 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Radiologist Billing Portal</title>
+
     <style>
         * {
             margin: 0;
@@ -292,7 +294,7 @@
         }
 
         .download-section {
-            margin-top: 30px;
+            margin-top: 20px;
             padding: 20px;
             background: #f8f9fa;
             border-radius: 8px;
@@ -393,8 +395,10 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
+
         <!-- Header -->
         <div class="header">
             <h1>📊 Radiologist Billing Portal</h1>
@@ -404,22 +408,37 @@
         <!-- Role Selector -->
         <div class="role-selector">
             <h3 style="margin-bottom: 20px; color: #333;">Select View</h3>
+
             <div class="role-buttons">
-                <button class="role-btn active" onclick="switchRole('radiologist')">👨‍⚕️ Radiologist View</button>
-                <button class="role-btn" onclick="switchRole('admin')">👤 Admin View</button>
+                <button
+                    class="role-btn active"
+                    onclick="switchRole('radiologist')">
+                    👨‍⚕️ Radiologist View
+                </button>
+
+                <button
+                    class="role-btn"
+                    onclick="switchRole('admin')">
+                    👤 Admin View
+                </button>
             </div>
         </div>
 
         <!-- Radiologist Dashboard -->
         <div id="radiologistDashboard" class="dashboard-section active">
+
             <div class="dashboard-header">
                 <div>
                     <h2>Radiologist Summary Report</h2>
-                    <p style="color: #666; font-size: 14px;">Select a radiologist and date range to generate report</p>
+                    <p style="color: #666; font-size: 14px;">
+                        Select a radiologist and date range to generate report
+                    </p>
                 </div>
+
                 <div class="role-label">Radiologist View</div>
             </div>
 
+            <!-- Radiologist Filters -->
             <div class="filters">
                 <div class="filter-group">
                     <label for="radRadiologist">Select Radiologist:</label>
@@ -427,24 +446,33 @@
                         <option value="">-- Loading radiologists... --</option>
                     </select>
                 </div>
+
                 <div class="filter-group">
                     <label for="radStartDate">Start Date:</label>
                     <input type="date" id="radStartDate">
                 </div>
+
                 <div class="filter-group">
                     <label for="radEndDate">End Date:</label>
                     <input type="date" id="radEndDate">
                 </div>
+
                 <div class="filter-group" style="align-self: flex-end;">
-                    <button class="btn btn-generate" onclick="generateRadiologistSummary()" style="width: 100%;">Generate Summary</button>
+                    <button
+                        class="btn btn-generate"
+                        onclick="generateRadiologistSummary()"
+                        style="width: 100%;">
+                        Generate Summary
+                    </button>
                 </div>
             </div>
 
             <div id="radiologistSummary" class="summary-section">
-                <!-- Loading indicator -->
-                <div id="radLoading" class="loading" style="display: none;">Loading data...</div>
 
-                <!-- Error message -->
+                <div id="radLoading" class="loading" style="display: none;">
+                    Loading data...
+                </div>
+
                 <div id="radError" class="error" style="display: none;"></div>
 
                 <!-- Total Cases by CPT Mods -->
@@ -458,8 +486,6 @@
                 <!-- Daily Cases by CPT Mods -->
                 <div class="summary-box">
                     <h3>📅 Daily Cases by CPT Mods</h3>
-                    <!--
-                    <div class="daily-breakdown" id="radDailyBreakdown"> -->
                     <div class="table-wrapper" id="radDailyBreakdown">
                         <!-- Populated by JavaScript -->
                     </div>
@@ -468,6 +494,7 @@
                 <!-- Studies List -->
                 <div class="table-section">
                     <h3>📋 Studies Read</h3>
+
                     <div class="table-wrapper">
                         <table id="radiologistStudiesTable">
                             <thead>
@@ -491,48 +518,67 @@
                     </div>
                 </div>
 
-                <!-- Download Section -->
+                <!-- Radiologist Download Section -->
                 <div class="download-section">
                     <h3>📥 Download Report</h3>
-                    <button class="btn btn-download" onclick="downloadRadiologistPDF()">📄 Download as PDF</button>
+                    <button
+                        class="btn btn-download"
+                        onclick="downloadRadiologistPDF()">
+                        📄 Download as PDF
+                    </button>
                 </div>
+
             </div>
         </div>
 
         <!-- Admin Dashboard -->
         <div id="adminDashboard" class="dashboard-section">
+
             <div class="dashboard-header">
                 <div>
                     <h2>Admin Summary Report</h2>
-                    <p style="color: #666; font-size: 14px;">View all cases by radiologist and date range</p>
+                    <p style="color: #666; font-size: 14px;">
+                        View all cases by radiologist and date range
+                    </p>
                 </div>
+
                 <div class="role-label">Admin View</div>
             </div>
 
+            <!-- Admin Filters -->
             <div class="filters">
                 <div class="filter-group">
                     <label for="adminStartDate">Start Date:</label>
                     <input type="date" id="adminStartDate">
                 </div>
+
                 <div class="filter-group">
                     <label for="adminEndDate">End Date:</label>
                     <input type="date" id="adminEndDate">
                 </div>
+
                 <div class="filter-group" style="align-self: flex-end;">
-                    <button class="btn btn-generate" onclick="generateAdminSummary()" style="width: 100%;">Generate Summary</button>
+                    <button
+                        class="btn btn-generate"
+                        onclick="generateAdminSummary()"
+                        style="width: 100%;">
+                        Generate Summary
+                    </button>
                 </div>
             </div>
 
             <div id="adminSummary" class="summary-section">
-                <!-- Loading indicator -->
-                <div id="adminLoading" class="loading" style="display: none;">Loading data...</div>
 
-                <!-- Error message -->
+                <div id="adminLoading" class="loading" style="display: none;">
+                    Loading data...
+                </div>
+
                 <div id="adminError" class="error" style="display: none;"></div>
 
-                <!-- Total Cases by Radiologist and CPT Mods -->
+                <!-- 1. Cases by Radiologist and CPT Mods -->
                 <div class="table-section">
-                    <h3>📊 Cases by Radiologist & CPT Mods</h3>
+                    <h3>📊 Cases by Radiologist &amp; CPT Mods</h3>
+
                     <div class="table-wrapper">
                         <table id="adminSummaryTable">
                             <thead>
@@ -549,9 +595,20 @@
                     </div>
                 </div>
 
-                <!-- All Studies List -->
+                <!-- 2. Download Button: directly below the summary table -->
+                <div class="download-section">
+                    <h3>📥 Download Report</h3>
+                    <button
+                        class="btn btn-download"
+                        onclick="downloadAdminExcel()">
+                        📊 Download as Excel
+                    </button>
+                </div>
+
+                <!-- 3. All Studies: follows the download button -->
                 <div class="table-section">
                     <h3>📋 All Studies</h3>
+
                     <div class="table-wrapper">
                         <table id="adminStudiesTable">
                             <thead>
@@ -575,13 +632,9 @@
                     </div>
                 </div>
 
-                <!-- Download Section -->
-                <div class="download-section">
-                    <h3>📥 Download Report</h3>
-                    <button class="btn btn-download" onclick="downloadAdminExcel()">📊 Download as Excel</button>
-                </div>
             </div>
         </div>
+
     </div>
 
     <!-- Libraries for PDF and Excel Export -->
@@ -592,3 +645,4 @@
     <script src="app.js"></script>
 </body>
 </html>
+```
