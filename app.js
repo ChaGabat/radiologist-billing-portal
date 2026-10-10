@@ -88,6 +88,7 @@ function initializeApp() {
     switchRole('radiologist');
 }
 
+<!--
 function switchRole(role) {
     const radiologistBtn = document.querySelector('.role-btn:nth-child(1)');
     const adminBtn = document.querySelector('.role-btn:nth-child(2)');
@@ -100,6 +101,41 @@ function switchRole(role) {
     } else {
         elements.radiologistDashboard.classList.remove('active');
         elements.adminDashboard.classList.add('active');
+        adminBtn.classList.add('active');
+        radiologistBtn.classList.remove('active');
+    }
+}
+-->
+
+function switchRole(role) {
+    // Require a passphrase before opening Admin View.
+    if (role === 'admin') {
+        const passphrase = prompt('Please enter the Admin passphrase:');
+
+        if (passphrase !== 'LifetrackMed236') {
+            if (passphrase !== null) {
+                alert('Incorrect passphrase. Admin access denied.');
+            }
+
+            // Return to Radiologist View if access is denied or cancelled.
+            switchRole('radiologist');
+            return;
+        }
+    }
+
+    const radiologistBtn = document.querySelector('.role-btn:nth-child(1)');
+    const adminBtn = document.querySelector('.role-btn:nth-child(2)');
+
+    if (role === 'radiologist') {
+        elements.radiologistDashboard.classList.add('active');
+        elements.adminDashboard.classList.remove('active');
+
+        radiologistBtn.classList.add('active');
+        adminBtn.classList.remove('active');
+    } else {
+        elements.radiologistDashboard.classList.remove('active');
+        elements.adminDashboard.classList.add('active');
+
         adminBtn.classList.add('active');
         radiologistBtn.classList.remove('active');
     }
