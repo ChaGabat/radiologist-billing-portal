@@ -607,20 +607,16 @@ function downloadAdminExcel() {
     const wb = XLSX.utils.book_new();
 
     // Tab 1: Cases by Radiologist and CPT Mods.
-    // This includes the dynamic CPT Mods columns and Total column.
     const summarySheet = XLSX.utils.table_to_sheet(summaryTable);
 
     // Tab 2: All Studies.
-    // This includes all study records displayed for the selected date range.
     const studiesSheet = XLSX.utils.table_to_sheet(studiesTable);
 
-    console.log("Sheet name:", sheetName, "Length:", sheetName.length);
-
-    // Add the worksheets in the requested order.
+    // Add worksheets using names within Excel's 31-character limit.
     XLSX.utils.book_append_sheet(
         wb,
         summarySheet,
-        'Cases by Radiologist and CPT Mods'
+        'Cases by Radiologist'
     );
 
     XLSX.utils.book_append_sheet(
