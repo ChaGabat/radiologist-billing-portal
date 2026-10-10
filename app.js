@@ -282,46 +282,113 @@ function renderTotalCptMods(container, totals) {
     });
 }
 
+
 function renderDailyBreakdown(container, data) {
     container.innerHTML = '';
 
     const grouped = {};
+    const cptModsSet = new Set();
 
+    // Group cases by calendar date and CPT Mods.
     data.forEach(item => {
-        const date = item.Time_in_Dictated;
-        if (!grouped[date]) grouped[date] = {};
+        const timestamp = String(item.Time_in_Dictated || '').trim();
 
-        const key = item.cpt_mods || 'Unknown';
-        grouped[date][key] = (grouped[date][key] || 0) + 1;
+        // Keep only YYYY-MM-DD; disregard the time.
+        const date = timestamp.substring(0, 10);
+
+        if (!date) return;
+
+        const cptMod = String(item.cpt_mods || 'Unknown').trim() || 'Unknown';
+
+        if (!grouped[date]) {
+            grouped[date] = {};
+        }
+
+        if (!grouped[date][cptMod]) {
+            grouped[date][cptMod] = 0;
+        }
+
+        grouped[date][cptMod] += 1;
+        cptModsSet.add(cptMod);
     });
 
+    // Sort dates chronologically and CPT Mods alphabetically.
     const dates = Object.keys(grouped).sort();
+    const cptMods = Array.from(cptModsSet).sort((a, b) =>
+        a.localeCompare(b)
+    );
 
-    if (!dates.length) {
-        container.innerHTML = '<div class="daily-card"><div class="date">No data</div><div class="cpt-item"><span>No records</span><span>0</span></div></div>';
+    if (!dates.length || !cptMods.length) {
+        container.textContent = 'No records found for this date range.';
         return;
     }
 
-    dates.forEach(date => {
-        const card = document.createElement('div');
-        card.className = 'daily-card';
+    // Create the pivot table.
+    const table = document.createElement('table');
+    table.className = 'daily-cpt-pivot';
+    table.style.width = '100%';
+    table.style.borderCollapse = 'collapse';
+    table.style.fontSize = '13px';
 
-        const items = Object.entries(grouped[date]).sort((a, b) => a[0].localeCompare(b[0]));
-        const itemHtml = items.map(([label, count]) => `
-            <div class="cpt-item">
-                <span>${label}</span>
-                <strong>${count}</strong>
-            </div>
-        `).join('');
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
 
-        card.innerHTML = `
-            <div class="date">${date}</div>
-            ${itemHtml}
-        `;
+    const dateHeader = document.createElement('th');
+    dateHeader.textContent = 'Date';
+    dateHeader.style.position = 'sticky';
+    dateHeader.style.left = '0';
+    dateHeader.style.backgroundColor = '#f1f5f9';
+    dateHeader.style.textAlign = 'left';
+    dateHeader.style.padding = '10px';
+    dateHeader.style.border = '1px solid #dbe2ea';
+    headerRow.appendChild(dateHeader);
 
-        container.appendChild(card);
+    cptMods.forEach(cptMod => {
+        const th = document.createElement('th');
+        th.textContent = cptMod;
+        th.style.backgroundColor = '#f1f5f9';
+        th.style.textAlign = 'center';
+        th.style.padding = '10px';
+        th.style.border = '1px solid #dbe2ea';
+        th.style.whiteSpace = 'nowrap';
+        headerRow.appendChild(th);
     });
+
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+
+    dates.forEach(date => {
+        const row = document.createElement('tr');
+
+        const dateCell = document.createElement('td');
+        dateCell.textContent = date;
+        dateCell.style.position = 'sticky';
+        dateCell.style.left = '0';
+        dateCell.style.backgroundColor = '#ffffff';
+        dateCell.style.fontWeight = '600';
+        dateCell.style.padding = '10px';
+        dateCell.style.border = '1px solid #dbe2ea';
+        dateCell.style.whiteSpace = 'nowrap';
+        row.appendChild(dateCell);
+
+        cptMods.forEach(cptMod => {
+            const cell = document.createElement('td');
+            cell.textContent = grouped[date][cptMod] || 0;
+            cell.style.textAlign = 'center';
+            cell.style.padding = '10px';
+            cell.style.border = '1px solid #dbe2ea';
+            row.appendChild(cell);
+        });
+
+        tbody.appendChild(row);
+    });
+
+    table.appendChild(tbody);
+    container.appendChild(table);
 }
+
 
 function renderStudyTable(tableBody, data, isAdminView = false) {
     tableBody.innerHTML = '';
