@@ -614,6 +614,8 @@ function downloadAdminExcel() {
     // This includes all study records displayed for the selected date range.
     const studiesSheet = XLSX.utils.table_to_sheet(studiesTable);
 
+    console.log("Sheet name:", sheetName, "Length:", sheetName.length);
+
     // Add the worksheets in the requested order.
     XLSX.utils.book_append_sheet(
         wb,
