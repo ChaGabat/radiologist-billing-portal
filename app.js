@@ -599,7 +599,6 @@ function downloadRadiologistPDF() {
     html2pdf().set(opt).from(element).save();
 }
 
-```javascript
 function downloadAdminExcel() {
     const summaryTable = document.getElementById('adminSummaryTable');
     const studiesTable = document.getElementById('adminStudiesTable');
@@ -631,6 +630,5 @@ function downloadAdminExcel() {
     // Download the Excel file.
     XLSX.writeFile(wb, 'Radiologist_Billing_Report.xlsx');
 }
-```
 
 window.addEventListener('DOMContentLoaded', initializeApp);
