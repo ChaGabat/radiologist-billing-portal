@@ -599,17 +599,38 @@ function downloadRadiologistPDF() {
     html2pdf().set(opt).from(element).save();
 }
 
+```javascript
 function downloadAdminExcel() {
     const summaryTable = document.getElementById('adminSummaryTable');
     const studiesTable = document.getElementById('adminStudiesTable');
 
+    // Create a new Excel workbook.
     const wb = XLSX.utils.book_new();
+
+    // Tab 1: Cases by Radiologist and CPT Mods.
+    // This includes the dynamic CPT Mods columns and Total column.
     const summarySheet = XLSX.utils.table_to_sheet(summaryTable);
+
+    // Tab 2: All Studies.
+    // This includes all study records displayed for the selected date range.
     const studiesSheet = XLSX.utils.table_to_sheet(studiesTable);
 
-    XLSX.utils.book_append_sheet(wb, summarySheet, 'Summary');
-    XLSX.utils.book_append_sheet(wb, studiesSheet, 'Studies');
-    XLSX.writeFile(wb, 'admin_summary.xlsx');
+    // Add the worksheets in the requested order.
+    XLSX.utils.book_append_sheet(
+        wb,
+        summarySheet,
+        'Cases by Radiologist and CPT Mods'
+    );
+
+    XLSX.utils.book_append_sheet(
+        wb,
+        studiesSheet,
+        'All Studies'
+    );
+
+    // Download the Excel file.
+    XLSX.writeFile(wb, 'Radiologist_Billing_Report.xlsx');
 }
+```
 
 window.addEventListener('DOMContentLoaded', initializeApp);
